@@ -3,7 +3,7 @@ const path = require('path');
 const folder = path.join(__dirname, 'files');
 const folderCopy = path.join(__dirname, 'files-copy');
 
-function copyDir() {
+async function copyDir() {
   fsPromise.rm(folderCopy, {recursive: true, force: true})
     .then( () => { 
       fsPromise.mkdir(folderCopy, { recursive: true })
