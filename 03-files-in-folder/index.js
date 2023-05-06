@@ -1,15 +1,21 @@
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const path = require('path');
 const secretFolder = path.join(__dirname, 'secret-folder');
 
-fs.readdir(secretFolder, (err, file) => {
-  if(err) throw err;
-  file.forEach(item => {
-    fs.stat(path.resolve(secretFolder, item), (err, stats) => {
-      if (err) throw err;
-      if (stats.isFile()) {
-        console.log(`${path.parse(item).name} - ${path.extname(item).slice(1)} - ${stats.size / 1024}kb`)
-      }
-    });
-  });
-});
+fsPromises.readdir(secretFolder, { withFileTypes: true, recursive: true, encodnig: "utf8" })
+  .then((data) => {
+    return data.filter(item => item.isFile())
+  })
+  .then((files) => {
+    return files.forEach( file => {
+      fsPromises.stat(path.join(secretFolder, file.name), "utf-8")
+        .then((stat) => {
+          console.log(path.basename(file.name, path.extname(file.name)) + ' -',
+          path.extname(file.name) + " -",
+          stat.size / 1024 + "kb")
+        })
+        .catch(error => console.log(error.message))
+    })
+  })
+  .catch(error => console.log(error.message))
