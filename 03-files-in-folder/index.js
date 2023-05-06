@@ -3,7 +3,8 @@ const fsPromises = require('fs/promises');
 const path = require('path');
 const secretFolder = path.join(__dirname, 'secret-folder');
 
-fsPromises.readdir(secretFolder, { withFileTypes: true, recursive: true, encodnig: "utf8" })
+async function infomation() {
+  fsPromises.readdir(secretFolder, { withFileTypes: true, recursive: true, encodnig: "utf8" })
   .then((data) => {
     return data.filter(item => item.isFile())
   })
@@ -19,3 +20,6 @@ fsPromises.readdir(secretFolder, { withFileTypes: true, recursive: true, encodni
     })
   })
   .catch(error => console.log(error.message))
+}
+
+infomation()
